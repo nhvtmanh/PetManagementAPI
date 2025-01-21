@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
 using PetManagementAPI.DTOs.ProductDTOs;
 using PetManagementAPI.Models;
 using PetManagementAPI.Repositories.Abstraction;
 using PetManagementAPI.Services.Abstraction;
+using PetManagementAPI.Services.Integrate;
 
 namespace PetManagementAPI.Services.Implementation
 {
@@ -10,16 +13,21 @@ namespace PetManagementAPI.Services.Implementation
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
+        private readonly CloudinaryService _cloudinaryService;
 
-        public ProductService(IProductRepository productRepository, IMapper mapper)
+        public ProductService(IProductRepository productRepository, IMapper mapper, CloudinaryService cloudinaryService)
         {
             _productRepository = productRepository;
             _mapper = mapper;
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task<Product> Create(CreateProductDTO productDTO)
         {
             var product = _mapper.Map<Product>(productDTO);
+
+            product.ImageUrl = await _cloudinaryService.UploadImage(productDTO.Image!, "products");
+
             return await _productRepository.Create(product);
         }
 
@@ -54,6 +62,12 @@ namespace PetManagementAPI.Services.Implementation
             }
 
             _mapper.Map(productDTO, product);
+
+            // Check if image is updated
+            if (productDTO.Image != null)
+            {
+                product.ImageUrl = await _cloudinaryService.UploadImage(productDTO.Image, "products");
+            }
 
             await _productRepository.Update(product);
             return product;

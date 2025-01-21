@@ -1,9 +1,13 @@
+using CloudinaryDotNet;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using PetManagementAPI.Data;
 using PetManagementAPI.Repositories.Abstraction;
 using PetManagementAPI.Repositories.Implementation;
 using PetManagementAPI.Services.Abstraction;
+using PetManagementAPI.Services.Configs;
 using PetManagementAPI.Services.Implementation;
+using PetManagementAPI.Services.Integrate;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.Configure<CloudinaryConfig>(builder.Configuration.GetSection("Cloudinary"));
+builder.Services.AddSingleton(x =>
+{
+    var config = x.GetRequiredService<IOptions<CloudinaryConfig>>().Value;
+    return new Cloudinary(new Account(config.CloudName, config.ApiKey, config.ApiSecret));
+});
+builder.Services.AddSingleton<CloudinaryService>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PetManagementAPI.DTOs.ProductDTOs;
@@ -42,6 +44,11 @@ namespace PetManagementAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (productDTO.Image == null || productDTO.Image.Length == 0)
+            {
+                return BadRequest(new { message = "No file uploaded" });
             }
 
             var product = await _productService.Create(productDTO);
