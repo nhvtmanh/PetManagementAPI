@@ -39,6 +39,11 @@ namespace PetManagementAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CategoryDTO categoryDTO)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var category = await _categoryService.Create(categoryDTO);
             return Ok(category);
         }
