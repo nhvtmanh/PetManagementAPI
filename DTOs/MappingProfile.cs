@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PetManagementAPI.DTOs.CategoryDTOs;
 using PetManagementAPI.DTOs.ProductDTOs;
+using PetManagementAPI.DTOs.VoucherDTOs;
 using PetManagementAPI.Models;
 
 namespace PetManagementAPI.DTOs
@@ -13,6 +14,9 @@ namespace PetManagementAPI.DTOs
 
             CreateMap<CreateProductDTO, Product>();
             CreateMap<UpdateProductDTO, Product>();
+
+            CreateMap<CreateVoucherDTO, Voucher>();
+            CreateMap<UpdateVoucherDTO, Voucher>();
         }
     }
 }

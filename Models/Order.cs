@@ -23,8 +23,13 @@ namespace PetManagementAPI.Models
         [ForeignKey("Payment")]
         public Guid? PaymentId { get; set; }
 
+        [ForeignKey("Voucher")]
+        public Guid? VoucherId { get; set; }
+
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
         public Payment? Payment { get; set; }
+
+        public Voucher? Voucher { get; set; }
     }
 }

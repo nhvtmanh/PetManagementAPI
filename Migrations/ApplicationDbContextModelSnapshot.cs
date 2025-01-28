@@ -124,9 +124,14 @@ namespace PetManagementAPI.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid?>("VoucherId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PaymentId");
+
+                    b.HasIndex("VoucherId");
 
                     b.ToTable("Orders");
                 });
@@ -251,6 +256,37 @@ namespace PetManagementAPI.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("PetManagementAPI.Models.Voucher", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("CurrentUsageCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DiscountAmount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MaxUsageCount")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Vouchers");
+                });
+
             modelBuilder.Entity("PetManagementAPI.Models.CartItem", b =>
                 {
                     b.HasOne("PetManagementAPI.Models.Cart", null)
@@ -285,7 +321,13 @@ namespace PetManagementAPI.Migrations
                         .WithMany()
                         .HasForeignKey("PaymentId");
 
+                    b.HasOne("PetManagementAPI.Models.Voucher", "Voucher")
+                        .WithMany()
+                        .HasForeignKey("VoucherId");
+
                     b.Navigation("Payment");
+
+                    b.Navigation("Voucher");
                 });
 
             modelBuilder.Entity("PetManagementAPI.Models.OrderItem", b =>
