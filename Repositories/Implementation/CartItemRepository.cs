@@ -19,5 +19,13 @@ namespace PetManagementAPI.Repositories.Implementation
             return await _dbContext.CartItems
                 .FirstOrDefaultAsync(ci => ci.CartId == cartId && ci.ProductId == productId);
         }
+
+        public async Task<IEnumerable<CartItem>> GetCartItems(List<Guid> cartItemIds)
+        {
+            return await _dbContext.CartItems
+                .Where(ci => cartItemIds.Contains(ci.Id))
+                .Include(ci => ci.Product)
+                .ToListAsync();
+        }
     }
 }
