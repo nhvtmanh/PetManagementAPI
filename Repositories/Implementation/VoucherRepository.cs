@@ -1,4 +1,5 @@
-﻿using PetManagementAPI.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PetManagementAPI.Data;
 using PetManagementAPI.Models;
 using PetManagementAPI.Repositories.Abstraction;
 
@@ -11,6 +12,12 @@ namespace PetManagementAPI.Repositories.Implementation
         public VoucherRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public async Task<Voucher?> GetByCode(string code)
+        {
+            return await _dbContext.Vouchers
+                .FirstOrDefaultAsync(v => v.Code == code);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace PetManagementAPI.Controllers
             return Ok(cart);
         }
 
-        [HttpPost]
+        [HttpPost("add-to-cart")]
         public async Task<IActionResult> AddToCart([FromBody] AddToCartDTO cartDTO)
         {
             if (!ModelState.IsValid)

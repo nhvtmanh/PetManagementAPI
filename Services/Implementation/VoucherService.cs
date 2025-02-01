@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using PetManagementAPI.Data;
 using PetManagementAPI.DTOs.VoucherDTOs;
 using PetManagementAPI.Enums;
@@ -49,6 +50,42 @@ namespace PetManagementAPI.Services.Implementation
         public async Task<Voucher?> GetById(Guid id)
         {
             return await _voucherRepository.GetById(id);
+        }
+
+        public async Task<VoucherValidateDTO> IsValid(string code)
+        {
+            var voucherValidateDTO = new VoucherValidateDTO
+            {
+                IsValid = false,
+                Voucher = await _voucherRepository.GetByCode(code)
+            };
+
+            // Check if voucher exists
+            if (voucherValidateDTO.Voucher == null)
+            {
+                return voucherValidateDTO;
+            }
+
+            // Check if voucher is active
+            if (voucherValidateDTO.Voucher!.Status != (byte)VoucherStatus.Active)
+            {
+                return voucherValidateDTO;
+            }
+
+            // Check if voucher is expired
+            if (DateTime.Now >= voucherValidateDTO.Voucher.ExpirationDate)
+            {
+                return voucherValidateDTO;
+            }
+
+            // Check if current usage is less than the maximum usage
+            if (voucherValidateDTO.Voucher.CurrentUsageCount >= voucherValidateDTO.Voucher.MaxUsageCount)
+            {
+                return voucherValidateDTO;
+            }
+
+            voucherValidateDTO.IsValid = true;
+            return voucherValidateDTO;
         }
 
         public async Task<Voucher?> Update(Guid id, UpdateVoucherDTO voucherDTO)
