@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetManagementAPI.DTOs.CartDTOs;
+using PetManagementAPI.DTOs.OrderDTOs;
 using PetManagementAPI.Services.Abstraction;
+using PetManagementAPI.Services.Implementation;
 using System.Security.Claims;
 
 namespace PetManagementAPI.Controllers
@@ -24,7 +26,7 @@ namespace PetManagementAPI.Controllers
             return Ok(cart);
         }
 
-        [HttpPost("add-to-cart")]
+        [HttpPost]
         public async Task<IActionResult> AddToCart([FromBody] AddToCartDTO cartDTO)
         {
             if (!ModelState.IsValid)
@@ -41,6 +43,39 @@ namespace PetManagementAPI.Controllers
 
             var cartItem = await _cartService.AddToCart(cart.Id, cartDTO.ProductId, cartDTO.Quantity);
             return Ok(cartItem);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateCartItem([FromBody] UpdateCartItemDTO updateCartItemDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var cartItem = await _cartService.UpdateCartItem(updateCartItemDTO);
+                return Ok(cartItem);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCartItems([FromBody] DeleteCartItemDTO deleteCartItemDTO)
+        {
+            try
+            {
+                await _cartService.DeleteCartItems(deleteCartItemDTO.CartItemIds);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

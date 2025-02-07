@@ -14,6 +14,12 @@ namespace PetManagementAPI.Repositories.Implementation
             _dbContext = dbContext;
         }
 
+        public async Task DeleteCartItems(IEnumerable<CartItem> cartItems)
+        {
+            _dbContext.CartItems.RemoveRange(cartItems);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<CartItem?> GetCartItem(Guid cartId, Guid productId)
         {
             return await _dbContext.CartItems

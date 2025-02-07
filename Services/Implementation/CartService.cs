@@ -1,4 +1,5 @@
-﻿using PetManagementAPI.Models;
+﻿using PetManagementAPI.DTOs.CartDTOs;
+using PetManagementAPI.Models;
 using PetManagementAPI.Repositories.Abstraction;
 using PetManagementAPI.Services.Abstraction;
 
@@ -40,6 +41,17 @@ namespace PetManagementAPI.Services.Implementation
             }
         }
 
+        public async Task DeleteCartItems(List<Guid> cartItemIds)
+        {
+            var cartItems = await _cartItemRepository.GetCartItems(cartItemIds);
+            if (cartItems.Count() == 0)
+            {
+                throw new Exception("No cart items found");
+            }
+
+            await _cartItemRepository.DeleteCartItems(cartItems);
+        }
+
         public async Task<Cart> GetCart(string customerId)
         {
             // Check if customer has a cart
@@ -56,6 +68,20 @@ namespace PetManagementAPI.Services.Implementation
             }
 
             return cart;
+        }
+
+        public async Task<CartItem> UpdateCartItem(UpdateCartItemDTO updateCartItemDTO)
+        {
+            var cartItem = await _cartItemRepository.GetById(updateCartItemDTO.Id);
+            if (cartItem == null)
+            {
+                throw new Exception("No cart item found");
+            }
+
+            cartItem.Quantity = updateCartItemDTO.Quantity;
+            await _cartItemRepository.Update(cartItem);
+
+            return cartItem;
         }
     }
 }
