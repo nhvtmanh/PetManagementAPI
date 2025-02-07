@@ -6,6 +6,7 @@ using PetManagementAPI.Models;
 using PetManagementAPI.Repositories.Abstraction;
 using PetManagementAPI.Services.Abstraction;
 using PetManagementAPI.Services.Integrate;
+using PetManagementAPI.DTOs.FavoriteDTOs;
 
 namespace PetManagementAPI.Services.Implementation
 {
@@ -20,6 +21,24 @@ namespace PetManagementAPI.Services.Implementation
             _productRepository = productRepository;
             _mapper = mapper;
             _cloudinaryService = cloudinaryService;
+        }
+
+        public async Task<FavoriteProduct> AddFavorite(AddFavoriteDTO addFavoriteDTO)
+        {
+            var product = await _productRepository.GetById(addFavoriteDTO.ProductId);
+            if (product == null)
+            {
+                throw new Exception("Product not found");
+            }
+
+            var favoriteProduct = await _productRepository.AddFavorite(addFavoriteDTO.CustomerId, addFavoriteDTO.ProductId);
+
+            if (favoriteProduct == null)
+            {
+                throw new Exception("Product already in favorites");
+            }
+
+            return favoriteProduct;
         }
 
         public async Task<Product> Create(CreateProductDTO productDTO)
@@ -43,6 +62,24 @@ namespace PetManagementAPI.Services.Implementation
             return product;
         }
 
+        public async Task<FavoriteProduct> DeleteFavorite(DeleteFavoriteDTO deleteFavoriteDTO)
+        {
+            var product = await _productRepository.GetById(deleteFavoriteDTO.ProductId);
+            if (product == null)
+            {
+                throw new Exception("Product not found");
+            }
+
+            var favoriteProduct = await _productRepository.DeleteFavorite(deleteFavoriteDTO.CustomerId, deleteFavoriteDTO.ProductId);
+
+            if (favoriteProduct == null)
+            {
+                throw new Exception("Product not in favorites");
+            }
+
+            return favoriteProduct;
+        }
+
         public async Task<IEnumerable<Product>> GetAll()
         {
             return await _productRepository.GetAll();
@@ -61,6 +98,11 @@ namespace PetManagementAPI.Services.Implementation
         public async Task<IEnumerable<Product>> GetByName(string name)
         {
             return await _productRepository.GetByName(name);
+        }
+
+        public async Task<IEnumerable<FavoriteProduct>> GetFavorite(string customerId)
+        {
+            return await _productRepository.GetFavorite(customerId);
         }
 
         public async Task<Product?> Update(Guid id, UpdateProductDTO productDTO)

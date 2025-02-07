@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PetManagementAPI.DTOs.ProductDTOs;
 using PetManagementAPI.Services.Abstraction;
+using System.Security.Claims;
+using PetManagementAPI.DTOs.FavoriteDTOs;
+using PetManagementAPI.Models;
 
 namespace PetManagementAPI.Controllers
 {
@@ -50,6 +53,51 @@ namespace PetManagementAPI.Controllers
         {
             var products = await _productService.GetByCategory(name);
             return Ok(products);
+        }
+
+        [HttpGet("get-favorite")]
+        public async Task<IActionResult> GetFavorite([FromQuery] string customerId)
+        {
+            var favoriteProducts = await _productService.GetFavorite(customerId);
+            return Ok(favoriteProducts);
+        }
+
+        [HttpPost("add-favorite")]
+        public async Task<IActionResult> AddFavorite([FromBody] AddFavoriteDTO addFavoriteDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var favoriteProduct = await _productService.AddFavorite(addFavoriteDTO);
+                return Ok(favoriteProduct);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("delete-favorite")]
+        public async Task<IActionResult> DeleteFavorite([FromBody] DeleteFavoriteDTO deleteFavoriteDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var favoriteProduct = await _productService.DeleteFavorite(deleteFavoriteDTO);
+                return Ok(favoriteProduct);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost]
