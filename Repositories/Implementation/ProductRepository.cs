@@ -14,6 +14,13 @@ namespace PetManagementAPI.Repositories.Implementation
             _dbContext = dbContext;
         }
 
+        public async Task<IEnumerable<Product>> GetByCategory(string name)
+        {
+            return await _dbContext.Products
+                .Where(x => x.Category!.Name == name)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Product>> GetByName(string name)
         {
             return await _dbContext.Products

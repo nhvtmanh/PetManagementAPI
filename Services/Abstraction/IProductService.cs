@@ -8,6 +8,7 @@ namespace PetManagementAPI.Services.Abstraction
         Task<IEnumerable<Product>> GetAll();
         Task<Product?> GetById(Guid id);
         Task<IEnumerable<Product>> GetByName(string name);
+        Task<IEnumerable<Product>> GetByCategory(string name);
 
         Task<Product> Create(CreateProductDTO productDTO);
         Task<Product?> Update(Guid id, UpdateProductDTO productDTO);
