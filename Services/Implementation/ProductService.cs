@@ -53,6 +53,11 @@ namespace PetManagementAPI.Services.Implementation
             return await _productRepository.GetById(id);
         }
 
+        public async Task<IEnumerable<Product>> GetByName(string name)
+        {
+            return await _productRepository.GetByName(name);
+        }
+
         public async Task<Product?> Update(Guid id, UpdateProductDTO productDTO)
         {
             var product = await _productRepository.GetById(id);

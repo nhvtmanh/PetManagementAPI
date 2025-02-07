@@ -38,6 +38,13 @@ namespace PetManagementAPI.Controllers
             return Ok(product);
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> GetByName([FromQuery] string name)
+        {
+            var products = await _productService.GetByName(name);
+            return Ok(products);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateProductDTO productDTO)
         {
