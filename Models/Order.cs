@@ -21,7 +21,7 @@ namespace PetManagementAPI.Models
         public string CustomerId { get; set; } = string.Empty;
 
         [ForeignKey("Payment")]
-        public Guid? PaymentId { get; set; }
+        public string? PaymentId { get; set; }
 
         [ForeignKey("Voucher")]
         public Guid? VoucherId { get; set; }

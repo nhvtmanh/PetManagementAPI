@@ -5,18 +5,12 @@ namespace PetManagementAPI.Models
     public class Payment
     {
         [Key]
-        public Guid Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         [Required]
         public DateTime PaymentDate { get; set; }
 
         [Required]
-        public decimal Total { get; set; }
-
-        [Required]
-        public bool PaymentMethod { get; set; }
-
-        [Required]
-        public byte Status { get; set; }
+        public string PaymentMethod { get; set; } = string.Empty;
     }
 }

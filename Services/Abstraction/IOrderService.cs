@@ -8,5 +8,6 @@ namespace PetManagementAPI.Services.Abstraction
         Task<Order> Checkout(CheckoutDTO checkoutDTO);
         Task<Order> PlaceOrder(PlaceOrderDTO placeOrderDTO);
         Task ProcessAfterPlaceOrder(Order order);
+        Task<Order> UpdateOrderStatus(Guid orderId, byte status);
     }
 }

@@ -119,5 +119,28 @@ namespace PetManagementAPI.Services.Implementation
             List<Guid> productIds = order.OrderItems.Select(oi => oi.ProductId).ToList();
             await _cartItemRepository.DeleteCartItemsByProductIds(productIds);
         }
+
+        public async Task<Order> UpdateOrderStatus(Guid orderId, byte status)
+        {
+            var order = await _orderRepository.GetOrderDetails(orderId);
+            if (order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            order.Status = status;
+            
+            // Check if order status is "Delivered" -> Update sold quantity
+            if (order.Status == (byte)OrderStatus.Delivered)
+            {
+                foreach (var item in order.OrderItems)
+                {
+                    item.Product!.SoldQuantity += item.Quantity;
+                }
+            }
+
+            await _orderRepository.Update(order);
+            return order;
+        }
     }
 }
