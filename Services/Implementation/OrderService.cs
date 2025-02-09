@@ -82,5 +82,42 @@ namespace PetManagementAPI.Services.Implementation
 
             return order;
         }
+
+        public async Task<Order> PlaceOrder(PlaceOrderDTO placeOrderDTO)
+        {
+            var order = await _orderRepository.GetOrderDetails(placeOrderDTO.OrderId);
+            if (order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            order.OrderDate = DateTime.Now;
+            order.Status = (byte)OrderStatus.Processing;
+
+            await ProcessAfterPlaceOrder(order);
+
+            return order;
+        }
+
+        public async Task ProcessAfterPlaceOrder(Order order)
+        {
+            // Update voucher current usage count
+            if (order.VoucherId != null)
+            {
+                order.Voucher!.CurrentUsageCount++;
+            }
+
+            // Update stock quantity
+            foreach (var item in order.OrderItems)
+            {
+                item.Product!.StockQuantity -= item.Quantity;
+            }
+
+            await _orderRepository.Update(order);
+
+            // Delete cart items
+            List<Guid> productIds = order.OrderItems.Select(oi => oi.ProductId).ToList();
+            await _cartItemRepository.DeleteCartItemsByProductIds(productIds);
+        }
     }
 }

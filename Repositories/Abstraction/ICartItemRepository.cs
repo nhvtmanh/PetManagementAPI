@@ -8,5 +8,6 @@ namespace PetManagementAPI.Repositories.Abstraction
         Task<IEnumerable<CartItem>> GetCartItems(List<Guid> cartItemIds);
 
         Task DeleteCartItems(IEnumerable<CartItem> cartItems);
+        Task DeleteCartItemsByProductIds(List<Guid> productIds);
     }
 }

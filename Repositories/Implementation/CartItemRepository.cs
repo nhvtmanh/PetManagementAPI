@@ -20,6 +20,15 @@ namespace PetManagementAPI.Repositories.Implementation
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task DeleteCartItemsByProductIds(List<Guid> productIds)
+        {
+            var cartItems = await _dbContext.CartItems
+                .Where(ci => productIds.Contains(ci.ProductId))
+                .ToListAsync();
+            _dbContext.CartItems.RemoveRange(cartItems);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<CartItem?> GetCartItem(Guid cartId, Guid productId)
         {
             return await _dbContext.CartItems
