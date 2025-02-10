@@ -83,6 +83,15 @@ namespace PetManagementAPI.Services.Implementation
             return order;
         }
 
+        public async Task<IEnumerable<Order>> GetAll()
+        {
+            return await _orderRepository.GetAll();
+        }
+        public async Task<Order?> GetOne(Guid id)
+        {
+            return await _orderRepository.GetOrderDetails(id);
+        }
+
         public async Task<Order> PlaceOrder(PlaceOrderDTO placeOrderDTO)
         {
             var order = await _orderRepository.GetOrderDetails(placeOrderDTO.OrderId);

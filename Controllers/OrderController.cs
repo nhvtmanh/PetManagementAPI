@@ -17,6 +17,23 @@ namespace PetManagementAPI.Controllers
             _orderService = orderService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var orders = await _orderService.GetAll();
+            return Ok(orders);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOne(Guid id)
+        {
+            var order = await _orderService.GetOne(id);
+            if (order == null)
+            {
+                return NotFound(new { message = "Order not found" });
+            }
+            return Ok(order);
+        }
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout([FromBody] CheckoutDTO checkoutDTO)
         {
