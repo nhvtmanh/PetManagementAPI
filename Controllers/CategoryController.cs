@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PetManagementAPI.DTOs.CategoryDTOs;
 using PetManagementAPI.Repositories.Abstraction;
+using PetManagementAPI.Repositories.Implementation;
 using PetManagementAPI.Services.Abstraction;
 
 namespace PetManagementAPI.Controllers
@@ -34,6 +35,13 @@ namespace PetManagementAPI.Controllers
             }
 
             return Ok(category);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> GetByName([FromQuery] string name)
+        {
+            var categories = await _categoryService.GetByName(name);
+            return Ok(categories);
         }
 
         [HttpPost]
