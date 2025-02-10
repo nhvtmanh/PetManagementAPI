@@ -52,6 +52,11 @@ namespace PetManagementAPI.Services.Implementation
             return await _voucherRepository.GetById(id);
         }
 
+        public async Task<IEnumerable<Voucher>> GetByName(string name)
+        {
+            return await _voucherRepository.GetByName(name);
+        }
+
         public async Task<VoucherValidateDTO> IsValid(string code)
         {
             var voucherValidateDTO = new VoucherValidateDTO

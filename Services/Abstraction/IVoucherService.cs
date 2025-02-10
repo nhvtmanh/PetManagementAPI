@@ -7,6 +7,8 @@ namespace PetManagementAPI.Services.Abstraction
     {
         Task<IEnumerable<Voucher>> GetAll();
         Task<Voucher?> GetById(Guid id);
+        Task<IEnumerable<Voucher>> GetByName(string name);
+
         Task<Voucher> Create(CreateVoucherDTO voucherDTO);
         Task<Voucher?> Update(Guid id, UpdateVoucherDTO voucherDTO);
         Task<Voucher?> Delete(Guid id);
