@@ -92,7 +92,7 @@ namespace PetManagementAPI.Services.Implementation
 
         public async Task<Product?> GetById(Guid id)
         {
-            return await _productRepository.GetById(id);
+            return await _productRepository.GetProductDetails(id);
         }
 
         public async Task<IEnumerable<Product>> GetByName(string name)

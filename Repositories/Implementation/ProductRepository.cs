@@ -67,5 +67,13 @@ namespace PetManagementAPI.Repositories.Implementation
                 .Where(x => x.CustomerId == customerId)
                 .ToListAsync();
         }
+
+        public async Task<Product?> GetProductDetails(Guid id)
+        {
+            return await _dbContext.Products
+                .Include(p => p.Category)
+                .Include(p => p.Reviews)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }
