@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetManagementAPI.DTOs.OrderDTOs;
 using PetManagementAPI.Services.Abstraction;
 using System.Net.Security;
+using System.Security.Claims;
 
 namespace PetManagementAPI.Controllers
 {
@@ -34,6 +35,14 @@ namespace PetManagementAPI.Controllers
             }
             return Ok(order);
         }
+
+        [HttpGet("get-customer-orders")]
+        public async Task<IActionResult> GetCustomerOrders([FromQuery] string customerId)
+        {
+            var orders = await _orderService.GetCustomerOrders(customerId);
+            return Ok(orders);
+        }
+
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout([FromBody] CheckoutDTO checkoutDTO)
         {

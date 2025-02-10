@@ -14,11 +14,19 @@ namespace PetManagementAPI.Repositories.Implementation
             _dbContext = dbContext;
         }
 
+        public async Task<IEnumerable<Order>> GetCustomerOrders(string customerId)
+        {
+            return await _dbContext.Orders
+                .Where(x => x.CustomerId == customerId)
+                .ToListAsync();
+        }
+
         public async Task<Order?> GetOrderDetails(Guid orderId)
         {
             return await _dbContext.Orders
                 .Include(o => o.Voucher)
                 .Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
+                .Include(o => o.Payment)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
     }
