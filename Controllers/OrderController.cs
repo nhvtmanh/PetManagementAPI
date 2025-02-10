@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetManagementAPI.DTOs.OrderDTOs;
+using PetManagementAPI.Enums;
 using PetManagementAPI.Services.Abstraction;
 using System.Net.Security;
 using System.Security.Claims;
@@ -80,6 +81,25 @@ namespace PetManagementAPI.Controllers
             try
             {
                 var order = await _orderService.PlaceOrder(placeOrderDTO);
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("update-order-status")]
+        public async Task<IActionResult> UpdateOrderStatus([FromBody] UpdateOrderStatusDTO updateOrderStatusDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var order = await _orderService.UpdateOrderStatus(updateOrderStatusDTO.OrderId, updateOrderStatusDTO.OrderStatus);
                 return Ok(order);
             }
             catch (Exception ex)
