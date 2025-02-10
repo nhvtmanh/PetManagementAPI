@@ -35,6 +35,20 @@ namespace PetManagementAPI.Controllers
             return Ok(voucher);
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> GetByName([FromQuery] string name)
+        {
+            var vouchers = await _voucherService.GetByName(name);
+            return Ok(vouchers);
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterVouchers([FromQuery] byte status)
+        {
+            var vouchers = await _voucherService.FilterVouchers(status);
+            return Ok(vouchers);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateVoucherDTO voucherDTO)
         {
