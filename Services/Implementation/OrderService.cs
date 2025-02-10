@@ -12,14 +12,12 @@ namespace PetManagementAPI.Services.Implementation
         private readonly IOrderRepository _orderRepository;
         private readonly ICartItemRepository _cartItemRepository;
         private readonly IVoucherService _voucherService;
-        private readonly IMapper _mapper;
 
-        public OrderService(IOrderRepository orderRepository, ICartItemRepository cartItemRepository, IVoucherService voucherService, IMapper mapper)
+        public OrderService(IOrderRepository orderRepository, ICartItemRepository cartItemRepository, IVoucherService voucherService)
         {
             _orderRepository = orderRepository;
             _cartItemRepository = cartItemRepository;
             _voucherService = voucherService;
-            _mapper = mapper;
         }
 
         public async Task<Order> Checkout(CheckoutDTO checkoutDTO)
@@ -81,6 +79,26 @@ namespace PetManagementAPI.Services.Implementation
             await _orderRepository.Update(order);
 
             return order;
+        }
+
+        public async Task<IEnumerable<Order>> FilterOrders(byte status)
+        {
+            return await _orderRepository.FilterOrders(status);
+        }
+
+        public async Task<IEnumerable<Order>> GetAll()
+        {
+            return await _orderRepository.GetAll();
+        }
+
+        public async Task<IEnumerable<Order>> GetCustomerOrders(string customerId)
+        {
+            return await _orderRepository.GetCustomerOrders(customerId);
+        }
+
+        public async Task<Order?> GetOne(Guid id)
+        {
+            return await _orderRepository.GetOrderDetails(id);
         }
 
         public async Task<Order> PlaceOrder(PlaceOrderDTO placeOrderDTO)
