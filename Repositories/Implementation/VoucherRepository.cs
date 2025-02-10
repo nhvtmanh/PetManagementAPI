@@ -14,6 +14,13 @@ namespace PetManagementAPI.Repositories.Implementation
             _dbContext = dbContext;
         }
 
+        public async Task<IEnumerable<Voucher>> FilterVouchers(byte status)
+        {
+            return await _dbContext.Vouchers
+                .Where(v => v.Status == status)
+                .ToListAsync();
+        }
+
         public async Task<Voucher?> GetByCode(string code)
         {
             return await _dbContext.Vouchers

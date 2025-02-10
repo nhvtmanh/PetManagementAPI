@@ -6,5 +6,6 @@ namespace PetManagementAPI.Repositories.Abstraction
     {
         Task<Voucher?> GetByCode(string code);
         Task<IEnumerable<Voucher>> GetByName(string name);
+        Task<IEnumerable<Voucher>> FilterVouchers(byte status);
     }
 }

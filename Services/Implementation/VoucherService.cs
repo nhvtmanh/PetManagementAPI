@@ -42,6 +42,11 @@ namespace PetManagementAPI.Services.Implementation
             return voucher;
         }
 
+        public async Task<IEnumerable<Voucher>> FilterVouchers(byte status)
+        {
+            return await _voucherRepository.FilterVouchers(status);
+        }
+
         public async Task<IEnumerable<Voucher>> GetAll()
         {
             return await _voucherRepository.GetAll();
