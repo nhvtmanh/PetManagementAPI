@@ -81,6 +81,11 @@ namespace PetManagementAPI.Services.Implementation
             return order;
         }
 
+        public async Task<IEnumerable<Order>> FilterOrders(byte status)
+        {
+            return await _orderRepository.FilterOrders(status);
+        }
+
         public async Task<IEnumerable<Order>> GetAll()
         {
             return await _orderRepository.GetAll();

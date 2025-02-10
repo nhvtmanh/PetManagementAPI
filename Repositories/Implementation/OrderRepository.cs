@@ -14,6 +14,13 @@ namespace PetManagementAPI.Repositories.Implementation
             _dbContext = dbContext;
         }
 
+        public async Task<IEnumerable<Order>> FilterOrders(byte status)
+        {
+            return await _dbContext.Orders
+                .Where(x => x.Status == status)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Order>> GetCustomerOrders(string customerId)
         {
             return await _dbContext.Orders

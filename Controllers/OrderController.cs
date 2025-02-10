@@ -43,6 +43,13 @@ namespace PetManagementAPI.Controllers
             return Ok(orders);
         }
 
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterOrders([FromQuery] byte status)
+        {
+            var orders = await _orderService.FilterOrders(status);
+            return Ok(orders);
+        }
+
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout([FromBody] CheckoutDTO checkoutDTO)
         {
