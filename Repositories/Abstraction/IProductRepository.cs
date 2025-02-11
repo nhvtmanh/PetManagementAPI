@@ -1,4 +1,5 @@
-﻿using PetManagementAPI.Models;
+﻿using PetManagementAPI.DTOs.DashboardDTOs;
+using PetManagementAPI.Models;
 
 namespace PetManagementAPI.Repositories.Abstraction
 {
@@ -11,5 +12,7 @@ namespace PetManagementAPI.Repositories.Abstraction
 
         Task<FavoriteProduct?> AddFavorite(string customerId, Guid productId);
         Task<FavoriteProduct?> DeleteFavorite(string customerId, Guid productId);
+
+        Task<ProductDashboardData> GetProductDashboardData();
     }
 }

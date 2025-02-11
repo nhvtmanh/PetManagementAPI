@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetManagementAPI.Data;
+using PetManagementAPI.DTOs.DashboardDTOs;
+using PetManagementAPI.Enums;
 using PetManagementAPI.Models;
 using PetManagementAPI.Repositories.Abstraction;
 
@@ -35,6 +37,41 @@ namespace PetManagementAPI.Repositories.Implementation
                 .Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
                 .Include(o => o.Payment)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
+        }
+
+        public async Task<OrderDashboardData> GetOrderDashboardData()
+        {
+            var totalOrders = await _dbContext.Orders.CountAsync();
+
+            var totalOrdersProcessing = await _dbContext.Orders.CountAsync(x => x.Status == (byte)OrderStatus.Processing);
+            var totalOrdersShipping = await _dbContext.Orders.CountAsync(x => x.Status == (byte)OrderStatus.Shipping);
+            var totalOrdersDelivered = await _dbContext.Orders.CountAsync(x => x.Status == (byte)OrderStatus.Delivered);
+            var totalOrdersCancelled = await _dbContext.Orders.CountAsync(x => x.Status == (byte)OrderStatus.Cancelled);
+            
+            var totalRevenue = await _dbContext.Orders.Where(x => x.Status == (byte)OrderStatus.Delivered).SumAsync(x => x.Total);
+            
+            var revenueByDays = await _dbContext.Orders
+                .Where(x => x.Status == (byte)OrderStatus.Delivered)
+                .GroupBy(x => x.OrderDate.Date)
+                .Select(x => new RevenueByDayDTO
+                {
+                    Date = DateOnly.FromDateTime(x.Key),
+                    Revenue = x.Sum(x => x.Total)
+                })
+                .OrderBy(x => x.Date)
+                .ToListAsync();
+
+            var orderDashboardData = new OrderDashboardData
+            {
+                TotalOrders = totalOrders,
+                TotalOrdersProcessing = totalOrdersProcessing,
+                TotalOrdersShipping = totalOrdersShipping,
+                TotalOrdersDelivered = totalOrdersDelivered,
+                TotalOrdersCancelled = totalOrdersCancelled,
+                TotalRevenue = totalRevenue,
+                RevenueByDays = revenueByDays
+            };
+            return orderDashboardData;
         }
     }
 }

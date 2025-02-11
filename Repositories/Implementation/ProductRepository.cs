@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PetManagementAPI.Data;
+using PetManagementAPI.DTOs.DashboardDTOs;
 using PetManagementAPI.Models;
 using PetManagementAPI.Repositories.Abstraction;
 
@@ -66,6 +67,25 @@ namespace PetManagementAPI.Repositories.Implementation
                 .Include(x => x.Product)
                 .Where(x => x.CustomerId == customerId)
                 .ToListAsync();
+        }
+
+        public async Task<ProductDashboardData> GetProductDashboardData()
+        {
+            var productDashboardData = new ProductDashboardData
+            {
+                TotalProducts = await _dbContext.Products.CountAsync(),
+                TopSellingProducts = await _dbContext.Products
+                    .OrderByDescending(p => p.SoldQuantity)
+                    .Take(5)
+                    .Select(p => new TopSellingProductDTO
+                    {
+                        ProductName = p.Name,
+                        SoldQuantity = p.SoldQuantity,
+                        ImageUrl = p.ImageUrl!
+                    })
+                    .ToListAsync()
+            };
+            return productDashboardData;
         }
 
         public async Task<Product?> GetProductDetails(Guid id)
