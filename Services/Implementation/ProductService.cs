@@ -33,11 +33,6 @@ namespace PetManagementAPI.Services.Implementation
 
             var favoriteProduct = await _productRepository.AddFavorite(addFavoriteDTO.CustomerId, addFavoriteDTO.ProductId);
 
-            if (favoriteProduct == null)
-            {
-                throw new Exception("Product already in favorites");
-            }
-
             return favoriteProduct;
         }
 
@@ -60,24 +55,6 @@ namespace PetManagementAPI.Services.Implementation
 
             await _productRepository.Delete(product);
             return product;
-        }
-
-        public async Task<FavoriteProduct> DeleteFavorite(DeleteFavoriteDTO deleteFavoriteDTO)
-        {
-            var product = await _productRepository.GetById(deleteFavoriteDTO.ProductId);
-            if (product == null)
-            {
-                throw new Exception("Product not found");
-            }
-
-            var favoriteProduct = await _productRepository.DeleteFavorite(deleteFavoriteDTO.CustomerId, deleteFavoriteDTO.ProductId);
-
-            if (favoriteProduct == null)
-            {
-                throw new Exception("Product not in favorites");
-            }
-
-            return favoriteProduct;
         }
 
         public async Task<IEnumerable<Product>> GetAll()

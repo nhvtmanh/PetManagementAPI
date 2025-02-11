@@ -10,8 +10,7 @@ namespace PetManagementAPI.Repositories.Abstraction
         Task<IEnumerable<Product>> GetByCategory(string name);
         Task<IEnumerable<FavoriteProduct>> GetFavorite(string customerId);
 
-        Task<FavoriteProduct?> AddFavorite(string customerId, Guid productId);
-        Task<FavoriteProduct?> DeleteFavorite(string customerId, Guid productId);
+        Task<FavoriteProduct> AddFavorite(string customerId, Guid productId);
 
         Task<ProductDashboardData> GetProductDashboardData();
     }

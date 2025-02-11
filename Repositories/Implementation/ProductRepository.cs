@@ -15,36 +15,30 @@ namespace PetManagementAPI.Repositories.Implementation
             _dbContext = dbContext;
         }
 
-        public async Task<FavoriteProduct?> AddFavorite(string customerId, Guid productId)
-        {
-            if (!_dbContext.FavoriteProducts.Any(x => x.CustomerId == customerId && x.ProductId == productId))
-            {
-                var favoriteProduct = new FavoriteProduct
-                {
-                    CustomerId = customerId,
-                    ProductId = productId
-                };
-
-                _dbContext.FavoriteProducts.Add(favoriteProduct);
-                await _dbContext.SaveChangesAsync();
-
-                return favoriteProduct;
-            }
-            return null;
-        }
-
-        public async Task<FavoriteProduct?> DeleteFavorite(string customerId, Guid productId)
+        public async Task<FavoriteProduct> AddFavorite(string customerId, Guid productId)
         {
             var favoriteProduct = await _dbContext.FavoriteProducts
                 .FirstOrDefaultAsync(x => x.CustomerId == customerId && x.ProductId == productId);
 
+            // If the product is already in favorites -> remove
             if (favoriteProduct != null)
             {
                 _dbContext.FavoriteProducts.Remove(favoriteProduct);
                 await _dbContext.SaveChangesAsync();
+
                 return favoriteProduct;
             }
-            return null;
+
+            // If the product is not in favorites -> add
+            favoriteProduct = new FavoriteProduct
+            {
+                CustomerId = customerId,
+                ProductId = productId
+            };
+            _dbContext.FavoriteProducts.Add(favoriteProduct);
+            await _dbContext.SaveChangesAsync();
+
+            return favoriteProduct;
         }
 
         public async Task<IEnumerable<Product>> GetByCategory(string name)
