@@ -81,25 +81,6 @@ namespace PetManagementAPI.Controllers
             }
         }
 
-        [HttpDelete("delete-favorite")]
-        public async Task<IActionResult> DeleteFavorite([FromBody] DeleteFavoriteDTO deleteFavoriteDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var favoriteProduct = await _productService.DeleteFavorite(deleteFavoriteDTO);
-                return Ok(favoriteProduct);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateProductDTO productDTO)
         {

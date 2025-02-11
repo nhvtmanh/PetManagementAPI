@@ -17,6 +17,5 @@ namespace PetManagementAPI.Services.Abstraction
         Task<Product?> Delete(Guid id);
 
         Task<FavoriteProduct> AddFavorite(AddFavoriteDTO addFavoriteDTO);
-        Task<FavoriteProduct> DeleteFavorite(DeleteFavoriteDTO deleteFavoriteDTO);
     }
 }
